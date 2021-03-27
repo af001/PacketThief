@@ -181,9 +181,7 @@ func startReceiverWorker(r *receiver) {
 		log.Printf("Adding receiver: %s\n", r.address)
 	}
 
-	doneChan := make(chan error, 1)
-
-	go func() {
+	for {
 
 		d := <-r.channel
 		_, err := handle.Write(d)
@@ -191,13 +189,10 @@ func startReceiverWorker(r *receiver) {
 			if *debug {
 				log.Printf("%s: %s", r.address, err)
 			}
-			doneChan <- err
 		}
 
 		if *debug {
 			log.Printf("Packet sent to %s (%d)", r.address, len(d))
 		}
-
-		doneChan <- nil
 	}()
 }
