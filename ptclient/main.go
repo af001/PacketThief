@@ -24,6 +24,7 @@ var (
 	name		= flag.String("n", "iomemd", "Set a custom process name")
 	debug   	= flag.Bool("debug", false, "Debug mode")
 	release     	= flag.Bool("v", false, "Show version info")
+	ifaces		= flag.Bool("l", false, "List available interfaces")
 )
 
 var (
@@ -43,6 +44,28 @@ func init() {
 	}
 }
 
+func showInterfaces() {
+        interfaces, err := net.Interfaces()
+        if err != nil {log.Fatal(err)}
+
+        fmt.Println("Interfaces: \n\nDevice\t  Address")
+
+        for _, i := range interfaces {
+                addrs, err := i.Addrs()
+                if err != nil {continue}
+
+                for _, a := range addrs {
+                        switch v := a.(type) {
+                        case *net.IPAddr:
+                                fmt.Printf("%v\t: %s\n", i.Name, v)
+                        case *net.IPNet:
+                                fmt.Printf("%v\t: %s\n", i.Name, v)
+                        }
+                }
+        }
+        fmt.Printf("\n")
+}
+
 func main() {
 	flag.Parse()
 
@@ -50,6 +73,11 @@ func main() {
 		printVersion()
 		os.Exit(0)
 	}
+
+        if *ifaces {
+                showInterfaces()
+                os.Exit(0)
+        }
 
 	if len(*servers) == 0 {
 		fmt.Println("No receivers defined!")
