@@ -14,7 +14,7 @@ const maxBufferSize = 1024
 var (
 	address = flag.String("a", "0.0.0.0", "Listen IP address")
 	debug	= flag.Bool("debug", false, "Enable verbose output")
-	release     = flag.Bool("v", false, "Show version info")
+	release = flag.Bool("v", false, "Show version info")
 )
 
 func init() {
