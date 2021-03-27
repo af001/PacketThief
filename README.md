@@ -51,6 +51,7 @@ Parameters:
     	Debug mode
   -i string
     	Interface to get packets from (default "any")
+  -l	List available interfaces
   -n string
     	Set a custom process name (default "iomemd")
   -p int
