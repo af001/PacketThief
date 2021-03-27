@@ -1,7 +1,7 @@
 # PacketThief
 Port mirroring tool written in Go to send traffic to an external server
 
-#### Build
+### Build
 This server will lisen on a port and write data to a pcap file. 
 ```bash
 cd ptserver
@@ -25,7 +25,7 @@ go get -t github.com/google/gopacket
 go build .
 ```
 
-#### Usage
+### Usage
 
 **Server**
 ```bash
