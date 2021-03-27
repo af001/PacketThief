@@ -14,7 +14,7 @@ go build .
 ```
 
 The client will capture traffic and send it to the server.
-```
+```bash
 cd ptclient
 
 # Download deps
