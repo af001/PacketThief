@@ -7,7 +7,7 @@ This server will lisen on a port and write data to a pcap file.
 cd ptserver
 
 # Download deps
-go get -t github.com/google/gopacket
+go get -u github.com/google/gopacket
 
 # Build 
 go build .
@@ -18,8 +18,8 @@ The client will capture traffic and send it to the server.
 cd ptclient
 
 # Download deps
-go get -t github.com/erikdubbelboer/gspt
-go get -t github.com/google/gopacket
+go get -u github.com/erikdubbelboer/gspt
+go get -u github.com/google/gopacket
 
 # Build
 go build .
