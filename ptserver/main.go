@@ -18,7 +18,7 @@ const maxBufferSize = 1024
 var (
         address         = flag.String("a", "0.0.0.0:8080", "Listen IP address")
         debug           = flag.Bool("debug", false, "Enable verbose output")
-        release     = flag.Bool("v", false, "Show version info")
+        release     	= flag.Bool("v", false, "Show version info")
         ifaces          = flag.Bool("l", false, "List available interfaces")
 )
 
@@ -44,6 +44,8 @@ func showInterfaces() {
         interfaces, err := net.Interfaces()
         if err != nil {log.Fatal(err)}
 
+	fmt.Println("Interfaces: \n\nDevice\t  Address")
+
         for _, i := range interfaces {
                 addrs, err := i.Addrs()
                 if err != nil {continue}
@@ -51,13 +53,14 @@ func showInterfaces() {
                 for _, a := range addrs {
                         switch v := a.(type) {
                         case *net.IPAddr:
-                                fmt.Printf("%v : %s (%s)\n", i.Name, v, v.IP.DefaultMask())
+                                fmt.Printf("%v\t: %s\n", i.Name, v)
 
                         case *net.IPNet:
-                                fmt.Printf("%v : %s [%v/%v]\n", i.Name, v, v.IP, v.Mask)
+                                fmt.Printf("%v\t: %s\n", i.Name, v)
                         }
                 }
         }
+	fmt.Printf("\n")
 }
 
 func main() {
