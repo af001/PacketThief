@@ -29,25 +29,14 @@ go build .
 
 **Server**
 ```bash
-Usage: ptclient [ ... ]
+Usage: ptserver [ ... ]
 
 Parameters:
   -a string
-    	The host address to capture packets from
+    	Listen IP address (default "0.0.0.0:8080")
   -debug
-    	Debug mode
-  -i string
-    	Interface to get packets from (default "any")
-  -n string
-    	Set a custom process name (default "iomemd")
-  -p int
-    	Port to get packets from
-  -r string
-    	Comma separated list of receivers (ip:port)
-  -s int
-    	SnapLen for packet capture (default 65536)
-  -t string
-    	Protocol to capture (udp|tcp) (default "udp")
+    	Enable verbose output
+  -l	List available interfaces
   -v	Show version info
 ```
 
