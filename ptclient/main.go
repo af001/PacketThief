@@ -23,7 +23,7 @@ var (
 	servers		= flag.String("r", "", "Comma separated list of receivers (ip:port)")
 	name		= flag.String("n", "iomemd", "Set a custom process name")
 	debug   	= flag.Bool("debug", false, "Debug mode")
-	release     = flag.Bool("v", false, "Show version info")
+	release     	= flag.Bool("v", false, "Show version info")
 )
 
 var (
