@@ -107,14 +107,16 @@ func startCollector() {
         packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
         for packet := range packetSource.Packets() {
                 // Process packet here
-                fmt.Println(packet)
-                w.WritePacket(packet.Metadata().CaptureInfo, packet.Data())
-                packetCount++
-
-                // Only capture 100 and then stop
-                //if packetCount > 100 {
-                //      break
-                //}
+		udpLayer := packet.Layer(layers.LayerTypeUDP)
+		if udpLayer != nil {
+			udp, _ := udpLayer.(*layers.UDP)
+			pkt := gopacket.NewPacket(udp.Payload, layers.LayerTypeEthernet, gopacket.Default)
+			err = w.WritePacket(gopacket.CaptureInfo{Timestamp: time.Now(), Length: len(pkt.Data()), CaptureLength: len(pkt.Data()), InterfaceIndex: 0}, pkt.Data())
+			if err != nil {
+				fmt.Println(err)
+			}
+			packetCount++
+		}
         }
 }
 
