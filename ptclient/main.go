@@ -194,5 +194,5 @@ func startReceiverWorker(r *receiver) {
 		if *debug {
 			log.Printf("Packet sent to %s (%d)", r.address, len(d))
 		}
-	}()
+	}
 }
