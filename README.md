@@ -33,11 +33,21 @@ Usage: ptserver [ ... ]
 
 Parameters:
   -a string
-    	Listen IP address (default "0.0.0.0:8080")
+    	The host address to capture packets from
   -debug
     	Enable verbose output
+  -i string
+    	Interface to listen on (default "any")
   -l	List available interfaces
+  -p int
+    	Port to listen on
+  -s int
+    	Capture snap length (default 65536)
+  -t string
+    	Protocol type to capture (tcp|udp) (default "udp")
   -v	Show version info
+  -w string
+    	Pcap filename (default "dump.pcap")
 ```
 
 **Client**
