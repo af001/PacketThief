@@ -28,6 +28,22 @@ var (
 	ifaces          = flag.Bool("l", false, "List available interfaces")
 )
 
+var cDecodeLayer = gopacket.RegisterLayerType(12345, gopacket.LayerTypeMetadata{Name: "cDecodeLayer", Decoder: gopacket.DecodeFunc(layerDecoder)})
+
+type cLayer struct {
+	cHeader []byte
+	payload []byte
+}
+
+func layerDecoder(data []byte, p gopacket.PacketBuilder) error {
+	p.AddLayer(&cLayer{data[:16], data[16:]})
+	return p.NextDecoder(layers.LayerTypeIPv4)
+}
+
+func (m cLayer) LayerType() gopacket.LayerType { return cDecodeLayer }
+func (m cLayer) LayerContents() []byte { return m.cHeader }
+func (m cLayer) LayerPayload() []byte { return m.payload }
+
 var (
 	err         error
 	handle      *pcap.Handle
@@ -114,6 +130,12 @@ func main() {
 		os.Exit(0)
 	}
 
+	protoChoices := map[string]bool{"udp": true, "tcp": true}
+	if _, validChoice := protoChoices[*proto]; !validChoice {
+		fmt.Println("Invalid protocol")
+		os.Exit(1)
+	}
+
 	go startCollector()
 
 	startReceiver()
@@ -165,11 +187,10 @@ func startCollector() {
 	// Start processing packets
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 	for packet := range packetSource.Packets() {
-		// Process packet here
 		udpLayer := packet.Layer(layers.LayerTypeUDP)
 		if udpLayer != nil {
 			udp, _ := udpLayer.(*layers.UDP)
-			pkt := gopacket.NewPacket(udp.Payload, layers.LayerTypeEthernet, gopacket.Default)
+			pkt := gopacket.NewPacket(udp.Payload, cDecodeLayer, gopacket.Lazy)
 			err = w.WritePacket(gopacket.CaptureInfo{Timestamp: time.Now(), Length: len(pkt.Data()), CaptureLength: len(pkt.Data()), InterfaceIndex: 0}, pkt.Data())
 			if err != nil {
 				fmt.Println(err)
@@ -191,7 +212,7 @@ func startReceiver() {
 	defer pc.Close()
 
 	if *debug {
-		fmt.Printf("Server started. Listening for UDP packets on %s:%d\n", listen, *port)
+		fmt.Printf("Server started. Listening for %s packets on %s:%d\n", *proto, listen, *port)
 	}
 
 	doneChan := make(chan error, 1)
