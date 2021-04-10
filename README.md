@@ -50,7 +50,7 @@ cd PacketThief/ptclient
 CC=arm-linux-gnueabi-gcc GOOS=linux GOARCH=arm CGO_ENABLED=1 CGO_LDFLAGS="-L /root/libpcap-1.10.0" go build -v -o ptclient-arm -ldflags '-w -extldflags "-static"' .
 arm-linux-gnueabi-strip ptclient-arm
 
-# Start server
+# Start client
 ./ptclient-arm -r 192.168.10.10:8000 -i any -p 1194 
 ```
 
