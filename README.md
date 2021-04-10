@@ -24,17 +24,13 @@ cd ptserver
 # Download deps
 go get -u github.com/google/gopacket
 
-# Compile libpcap
-cd libpcap-1.10.0
-export CFLAGS='-Os'
-./configure --with-pcap=linux
-
 # Build 
 cd PacketThief/ptserver
-CC=gcc GOOS=linux GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-L /root/libpcap-1.10.0" go build -v -o ptclient-amd64 -ldflags '-w -extldflags "-static"' .
+CC=gcc GOOS=linux GOARCH=amd64 go build -v -o ptserver-amd64 -ldflags '-w -extldflags "-static"' .
+strip ptserver-amd64
 
 # Start server
-./ptserver -i ens18 -p 8000 -w capture.pcap
+./ptserver-amd64 -i ens18 -p 8000 -w capture.pcap
 ```
 
 The client will capture traffic and send it to the server.
@@ -58,7 +54,7 @@ CC=arm-linux-gnueabi-gcc GOOS=linux GOARCH=arm CGO_ENABLED=1 CGO_LDFLAGS="-L /ro
 arm-linux-gnueabi-strip ptclient-arm
 
 # Start server
-./ptclient -r 192.168.10.10:8000 -i any -p 1194 
+./ptclient-arm -r 192.168.10.10:8000 -i any -p 1194 
 ```
 
 ### Usage
