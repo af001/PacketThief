@@ -1,6 +1,21 @@
 # PacketThief
 Port mirroring tool written in Go to send traffic to an external server
 
+```bash
+git clone https://github.com/af001/PacketThief.git
+```
+
+### Example static cross-compilation example for ARM (ptclient) and X86-64 (ptserver) 
+```bash
+# Install dependencies for libpcap cross-compilation
+apt update && apt -y install flex bison
+
+# Get libpcap
+wget https://www.tcpdump.org/release/libpcap-1.10.0.tar.gz
+tar xzvf libpcap-1.10.0.tar.gz
+cd libpcap-1.10.0
+```
+
 ### Build
 This server will lisen on a port and write data to a pcap file. 
 ```bash
@@ -9,8 +24,17 @@ cd ptserver
 # Download deps
 go get -u github.com/google/gopacket
 
+# Compile libpcap
+cd libpcap-1.10.0
+export CFLAGS='-Os'
+./configure --with-pcap=linux
+
 # Build 
-go build .
+cd PacketThief/ptserver
+CC=gcc GOOS=linux GOARCH=amd64 CGO_ENABLED=1 CGO_LDFLAGS="-L /root/libpcap-1.10.0" go build -v -o ptclient-amd64 -ldflags '-w -extldflags "-static"' .
+
+# Start server
+./ptserver -i ens18 -p 8000 -w capture.pcap
 ```
 
 The client will capture traffic and send it to the server.
@@ -21,8 +45,20 @@ cd ptclient
 go get -u github.com/erikdubbelboer/gspt
 go get -u github.com/google/gopacket
 
+# Configure and compile for a specific architecture
+apt install -y gcc-multilib-arm-linux-gnueabi
+export CC=arm-linux-gnueabi-gcc
+export CFLAGS='-Os'
+cd libpcap-1.10.0
+./configure --host=arm-linux-gnueabi --with-pcap=linux
+
 # Build
-go build .
+cd PacketThief/ptclient
+CC=arm-linux-gnueabi-gcc GOOS=linux GOARCH=arm CGO_ENABLED=1 CGO_LDFLAGS="-L /root/libpcap-1.10.0" go build -v -o ptclient-arm -ldflags '-w -extldflags "-static"' .
+arm-linux-gnueabi-strip ptclient-arm
+
+# Start server
+./ptclient -r 192.168.10.10:8000 -i any -p 1194 
 ```
 
 ### Usage
