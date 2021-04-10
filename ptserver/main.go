@@ -19,10 +19,10 @@ const maxBufferSize = 1024
 var (
 	device          = flag.String("i", "any", "Interface to listen on")
 	port            = flag.Int("p", 0, "Port to listen on")
-	proto			= flag.String("t", "udp", "Protocol type to capture (tcp|udp)")
-	target			= flag.String("a", "", "The host address to capture packets from")
-	name			= flag.String("w", "dump.pcap", "Pcap filename")
-	snaplen			= flag.Int("s", 65536, "Capture snap length")
+	proto		= flag.String("t", "udp", "Protocol type to capture (tcp|udp)")
+	target		= flag.String("a", "", "The host address to capture packets from")
+	name		= flag.String("w", "dump.pcap", "Pcap filename")
+	snaplen		= flag.Int("s", 65536, "Capture snap length")
 	debug           = flag.Bool("debug", false, "Enable verbose output")
 	release     	= flag.Bool("v", false, "Show version info")
 	ifaces          = flag.Bool("l", false, "List available interfaces")
@@ -35,6 +35,7 @@ type cLayer struct {
 	payload []byte
 }
 
+// Decode layer might need to be modified. [:16,16:]
 func layerDecoder(data []byte, p gopacket.PacketBuilder) error {
 	p.AddLayer(&cLayer{data[:16], data[16:]})
 	return p.NextDecoder(layers.LayerTypeIPv4)
