@@ -19,13 +19,12 @@ cd libpcap-1.10.0
 ### Build
 This server will lisen on a port and write data to a pcap file. 
 ```bash
-cd ptserver
+cd PacketThief/ptserver
 
 # Download deps
 go get -u github.com/google/gopacket
 
 # Build 
-cd PacketThief/ptserver
 CC=gcc GOOS=linux GOARCH=amd64 go build -v -o ptserver-amd64 -ldflags '-w -extldflags "-static"' .
 strip ptserver-amd64
 
@@ -35,8 +34,6 @@ strip ptserver-amd64
 
 The client will capture traffic and send it to the server.
 ```bash
-cd ptclient
-
 # Download deps
 go get -u github.com/erikdubbelboer/gspt
 go get -u github.com/google/gopacket
