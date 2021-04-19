@@ -105,7 +105,7 @@ Parameters:
 ```
 
 #### Issues
-* When listening on *any* interface, the capture reconstruction may be incorrect. This has to do with the decoding Linux Cooked Capture layer. [Info](https://github.com/google/gopacket/issues/37) 
+When listening on *any* interface, the capture reconstruction may be incorrect. This has to do with the decoding Linux Cooked Capture layer. [Info](https://github.com/google/gopacket/issues/37) 
 
 #### References
 [udp-mirror](https://github.com/czerwonk/udp-mirror) by czerwonk
